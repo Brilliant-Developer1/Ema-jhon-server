@@ -47,14 +47,24 @@ async function run() {
         //  console.log("clicked the post" , req.body);
         const query = {key: {$in: keys}}
          const products = await productsCollection.find(query).toArray();
-        //  console.log(keys);
+         console.log(products);
         res.json(products)
+        // res.send("check")
       });
 
+      // Get Orders from server
+      app.get("/orders", async (req,res) => {
+        const cursor = orderCollection.find({});
+        const orders = await cursor.toArray();
+        res.json(orders) ;
+      })
       // Add Orders
       app.post('/orders', async(req, res) => {
-        const order = req.body
+        const order = req.body;
+        order.createdAt = new Date();
+        
         const result = await orderCollection.insertOne(order)
+        console.log(result);
         res.json(result);
       })
     } finally {
